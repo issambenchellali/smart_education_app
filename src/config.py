@@ -10,9 +10,9 @@ class Config:
     """فئة إعدادات التطبيق"""
     
     # Supabase
-    SUPABASE_URL = os.getenv("SUPABASE_URL", "")
-    SUPABASE_KEY = os.getenv("SUPABASE_KEY", "")
-    SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY", "")
+    SUPABASE_URL = os.getenv("https://tsossglwefidkyvtprls.supabase.co", "")
+    SUPABASE_KEY = os.getenv("sb_publishable_sKTHKljlq5MKIbu-kT21aA_1orzuIc8", "")
+    SUPABASE_SERVICE_KEY = os.getenv("sb_publishable_sKTHKljlq5MKIbu-kT21aA_1orzuIc8", "")
     
     # OpenAI
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
