@@ -1149,7 +1149,7 @@ def show_login_page():
                             if result:
                                 st.success("تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.")
                             else:
-                                st.success("تم إنشاء الحساب محلياً (اتصال قاعدة البيانات غير متوفر)")
+                                st.error("فشل الاتصال بقاعدة البيانات. تأكد من ملف secrets.toml")
             
             st.markdown('</div>', unsafe_allow_html=True)
         
