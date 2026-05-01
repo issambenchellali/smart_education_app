@@ -1143,13 +1143,26 @@ def show_login_page():
                         st.error("كلمتا المرور غير متطابقتين")
                     else:
                         with st.spinner("جاري إنشاء الحساب..."):
-                            result = db_manager.create_user(
-                                new_username, new_password, email, full_name, role, grade
-                            )
-                            if result:
-                                st.success("تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.")
-                            else:
-                                st.error("فشل الاتصال بقاعدة البيانات. تأكد من ملف secrets.toml")
+                            try:
+                                # محاولة الاتصال الصريحة
+                                if not SUPABASE_URL or not SUPABASE_KEY:
+                                    st.error("المفاتيح في ملف secrets.toml فارغة!")
+                                else:
+                                    result = db_manager.create_user(
+                                        new_username, new_password, email, full_name, role, grade
+                                    )
+                                    if result:
+                                        st.success("تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.")
+                                    else:
+                                        st.error("تم استلام رد من قاعدة البيانات لكنه فارغ (قد يكون خطأ في SQL).")
+                            except requests.exceptions.ConnectionError as e:
+                                st.error(f"🚫 خطأ في الاتصال (Connection Error): {e}")
+                                st.warning("تأكد من رابط URL وأن الإنترنت يعمل")
+                            except requests.exceptions.HTTPError as e:
+                                st.error(f"🚫 خطأ HTTP (الكود غير صحيح): {e}")
+                                st.warning("غالباً الـ URL خاطئ أو المفتاح (Key) غير صحيح")
+                            except Exception as e:
+                                st.error(f"❌ حدث خطأ غير متوقع: {e}")
             
             st.markdown('</div>', unsafe_allow_html=True)
         
