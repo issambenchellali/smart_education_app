@@ -317,16 +317,27 @@ class DatabaseManager:
             else:
                 return None
             
+            # إذا كان الكود 200 أو 201 (نجاح)
             if response.status_code in [200, 201]:
-                return response.json()
+                try:
+                    # محاولة قراءة البيانات
+                    data = response.json()
+                    # إذا كانت البيانات موجودة، أعدها
+                    if data:
+                        return data
+                    # إذا كانت البيانات فارغة [] أو None، هذا يعني نجاح الإضافة ولكن قاعدة البيانات لم ترجع صفوف (تحدث أحياناً في INSERT)
+                    return {"status": "success", "details": "no_content"}
+                except:
+                    # إذا تعذر تحويل الرد لـ JSON، لكن الكود هو 200/201، نفترض النجاح
+                    return {"status": "success", "details": "empty_body"}
             else:
+                # خطأ من السيرفر (401, 403, 404, etc.)
                 print(f"Supabase Error: {response.status_code} - {response.text}")
                 return None
                 
         except Exception as e:
             print(f"Database connection error: {e}")
             return None
-    
     def create_user(self, username: str, password: str, email: str, full_name: str, role: str = "طالب", grade: str = None):
         """إنشاء مستخدم جديد"""
         user_data = {
